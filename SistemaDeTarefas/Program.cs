@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 class Program 
-{ 
+{
+    public static int PessoLoginId;
     public static void Main()
     {
         string resposta,nome, email, senha;
@@ -19,38 +20,90 @@ class Program
         switch (resposta)
         {
             case "1":
-                Console.WriteLine("Digite seu email para login");
-                email = Console.ReadLine();
-                Console.WriteLine("Digite sua senha");
-                senha = Console.ReadLine();
-
-                bool login = LoginUsuario(email, senha).Result;
-
-                if (login)
-                {
-                    Console.WriteLine("Login efetuado com sucesso");
-                }
-                else
-                {
-                    Console.WriteLine("senha ou email incorreto!");
-                }
+                RealizarLogin();
 
                     break;
             case "2":
-                
-                Console.WriteLine("Digite seu nome de usuario para cadastro");
-                nome = Console.ReadLine();
-                Console.WriteLine("Digite seu email para cadastro");
-                email = Console.ReadLine();
-                Console.WriteLine("Agora digite sua senha para cadastro");
-                senha = Console.ReadLine();
 
-                CadastroUsuario(nome, email, senha);
+                CadastroUsuario();
                 break;
         }
 
 
 
+    }
+
+    public static void CadastrarTarefa()
+    {
+        string nomeTarefa;
+        TimeSpan tempoTarefa;
+        Console.WriteLine("Otimo!!! Qual o nome para a tarefa?");
+        nomeTarefa = Console.ReadLine();
+        Console.WriteLine("Qual o tempo estimado para a tarefa?");
+        tempoTarefa = TimeSpan.Parse(Console.ReadLine());
+        try
+        {
+            using (var context = new AppDbContext())
+            {
+                var tarefa = new Tarefas
+                {
+                    NomeTarefa = nomeTarefa,
+                    TempoEstimado = tempoTarefa,
+                    PessoaId = PessoLoginId
+                    
+
+                };
+                context.Add(tarefa);
+                context.SaveChanges();
+
+
+            }
+        }catch(Exception ex)
+        {
+            throw new Exception("Ocorreu uma excessão: " + ex);
+        }
+
+        Console.WriteLine("Cadastro feito com sucesso.");
+        
+
+    }
+
+    public static void RealizarLogin()
+    {
+
+        string email, senha, resposta;
+        Console.WriteLine("Digite seu email para login");
+        email = Console.ReadLine();
+        Console.WriteLine("Digite sua senha");
+        senha = Console.ReadLine();
+
+        bool login = LoginUsuario(email, senha).Result;
+
+        if (login)
+        {
+            Console.WriteLine("Login efetuado com sucesso");
+            Thread.Sleep(1500);
+            Console.Clear();
+
+            Console.WriteLine("Deseja ver tarefas cadastradas ou efetuar o cadastro? \n " +
+                "1)Ver Tarefas \n 2)Efetuar Cadastro");
+            resposta = Console.ReadLine();
+
+            switch (resposta)
+            {
+                case "1":
+                    
+                    break;
+                case "2":
+                    CadastrarTarefa();
+                    break;
+            }
+
+        }
+        else
+        {
+            Console.WriteLine("senha ou email incorreto!");
+        }
     }
     public static async Task<bool> LoginUsuario(string email, string senha)
     {
@@ -65,14 +118,27 @@ class Program
             }
 
             bool SenhaValida = BCrypt.Net.BCrypt.Verify(senha, credenciais.Senha);
+            if (SenhaValida)
+            {
+                PessoLoginId = credenciais.PessoaId;
+            }
             return SenhaValida;
         }
         
 
     }
 
-    public static void CadastroUsuario(string nome, string email, string senha)
+
+
+    public static void CadastroUsuario()
     {
+        string nome, email, senha;
+        Console.WriteLine("Digite seu nome de usuario para cadastro");
+        nome = Console.ReadLine();
+        Console.WriteLine("Digite seu email para cadastro");
+        email = Console.ReadLine();
+        Console.WriteLine("Agora digite sua senha para cadastro");
+        senha = Console.ReadLine();
         try {
             using (var context = new AppDbContext())
             {
