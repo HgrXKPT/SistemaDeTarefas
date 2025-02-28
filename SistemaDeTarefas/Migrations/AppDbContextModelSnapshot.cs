@@ -63,7 +63,7 @@ namespace SistemaDeTarefas.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pessoa");
+                    b.ToTable("Pessoas");
                 });
 
             modelBuilder.Entity("SistemaDeTarefas.Models.Tarefas", b =>

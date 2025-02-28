@@ -12,8 +12,8 @@ using SistemaDeTarefas.Models;
 namespace SistemaDeTarefas.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250228010457_Init")]
-    partial class Init
+    [Migration("20250228030224_Test")]
+    partial class Test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace SistemaDeTarefas.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pessoa");
+                    b.ToTable("Pessoas");
                 });
 
             modelBuilder.Entity("SistemaDeTarefas.Models.Tarefas", b =>
