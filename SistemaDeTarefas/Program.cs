@@ -4,6 +4,7 @@ using BCrypt.Net;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 class Program 
 {
@@ -33,6 +34,35 @@ class Program
 
     }
 
+    public static async Task VerTarefasCadastradas()
+    {
+        using (var context = new AppDbContext())
+        {
+            Console.WriteLine($"PessoaLoginId: {PessoLoginId}");
+
+            var tarefas = context.Tarefas
+                 .Where(t => t.PessoaId == PessoLoginId)
+                 .Select(t => new
+                 {
+                     t.NomeTarefa,
+                     t.TempoEstimado
+                 });
+
+            Console.WriteLine($"Número de tarefas encontradas: {tarefas.Count()}");
+
+            if (tarefas.Any())
+            {
+                foreach(var item in tarefas)
+                {
+                    Console.WriteLine($"Tarefa: {item.NomeTarefa} Tempo estimado {item.TempoEstimado}");
+                }
+            }
+
+            
+
+        }
+    }
+
     public static void CadastrarTarefa()
     {
         string nomeTarefa;
@@ -49,8 +79,9 @@ class Program
                 {
                     NomeTarefa = nomeTarefa,
                     TempoEstimado = tempoTarefa,
+                    DiaCriacao = DateTime.Now,
                     PessoaId = PessoLoginId
-                    
+
 
                 };
                 context.Add(tarefa);
@@ -92,7 +123,7 @@ class Program
             switch (resposta)
             {
                 case "1":
-                    
+                    VerTarefasCadastradas();
                     break;
                 case "2":
                     CadastrarTarefa();
