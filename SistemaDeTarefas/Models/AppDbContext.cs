@@ -10,6 +10,9 @@ namespace SistemaDeTarefas.Models
 {
     class AppDbContext : DbContext
     {
+        public DbSet<Pessoa> Pessoas { get; set; }
+        public  DbSet<Credenciais> Credenciais { get; set; }
+        public  DbSet<Tarefas> Tarefas { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
@@ -28,7 +31,7 @@ namespace SistemaDeTarefas.Models
                  .HasOne(t => t.Pessoa)
                  .WithMany(p => p.Tarefas)
                  .HasForeignKey(p => p.PessoaId);
-                
+
         }
     }
 }
