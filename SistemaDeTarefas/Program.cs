@@ -45,8 +45,13 @@ class Program
                  .Select(t => new
                  {
                      t.NomeTarefa,
-                     t.TempoEstimado
+                     t.TempoEstimado,
+                     t.DiaCriacao,
+                     pessoaNome = t.Pessoa.Nome
                  });
+
+            
+
 
             Console.WriteLine($"Número de tarefas encontradas: {tarefas.Count()}");
 
@@ -54,7 +59,7 @@ class Program
             {
                 foreach(var item in tarefas)
                 {
-                    Console.WriteLine($"Tarefa: {item.NomeTarefa} Tempo estimado {item.TempoEstimado}");
+                    Console.WriteLine($"Nome da pessoa: {item.pessoaNome} Tarefa: {item.NomeTarefa} Tempo estimado {item.TempoEstimado} Data Criação {item.DiaCriacao}");
                 }
             }
 
